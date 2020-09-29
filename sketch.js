@@ -1,6 +1,8 @@
-var w=50;
+var w=20;
 var cols,rows;
 var grid=[];
+
+var stack=[];
 
 var current;
 
@@ -8,7 +10,7 @@ function setup() {
   createCanvas(500, 500);
   cols= floor(width/w);
   rows=floor(height/w);
-  frameRate(5);
+  frameRate(100);
 
   for(var i=0;i< rows ; i++){
     for(var j=0;j< cols;j++){
@@ -21,18 +23,32 @@ function setup() {
 }
 
 function draw() {
+
   background(51);
   for(var i=0;i<grid.length;i++){
     grid[i].show();
   }
-
+  
+  // step 1
   current.visited=true;
+  current.highlight();
   var next= current.checkNeighnours();
   if(next){
     next.visited=true;
+    // step2
+    stack.push(current);
+    // step 3
+    removeWalls(current,next);
+    //step 4
     current=next;
+  } else if(stack.length >0){
+    current=stack.pop();
   }
+
+
 }
+
+
 
 
 function index(i,j){
@@ -50,6 +66,16 @@ this.i= i;
 this.j=j;
 this.visited=false;
 this.walls=[true,true,true,true];
+
+this.highlight=function(){
+  var x= this.i * w;
+  var y= this.j * w;
+  noStroke();
+  fill(0,0,255);
+  rect(x,y,w,w);
+
+} 
+
 
 this.checkNeighnours=function(){
   var neighbours=[];
@@ -85,7 +111,7 @@ this.checkNeighnours=function(){
 this.show=function(){
 var x=this.i * w;
 var y=this.j*w;
-stroke(255);
+stroke(255,0,0);
 
 if(this.walls[0]){
   line(x,y,x+w,y)
@@ -104,11 +130,38 @@ line(x,y+w,x,y)
 }
 
 if(this.visited){
-  fill(55,233,255);
+  noStroke();
+  fill(252, 236, 3);
   rect(x,y,w,w)
 }
 // noFill();
 // rect(x,y,w,w);
 }
+
+}
+
+
+
+
+
+function removeWalls(a,b){
+    var x=a.i - b.i;
+    if(x == 1){
+      a.walls[3]=false;
+      b.walls[1]=false;
+    }else if(x == -1){
+      a.walls[1] = false;
+      b.walls[3] = false;
+    }
+
+    var y=a.j - b.j;
+    if(y == 1){
+      a.walls[0]=false;
+      b.walls[2]=false;
+    }else if(y == -1){
+      a.walls[2] = false;
+      b.walls[0] = false;
+    }
+
 
 }
