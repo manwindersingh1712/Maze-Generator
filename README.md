@@ -6,5 +6,5 @@ These are few of the snaps of the maze getting created.
 You need to run this over a server so as to load it .
 You can use an extension "live server" in vs code to run it. 
 
-![](images/caprute1.png)
-![](images/caprute2.png)
+![](images/capture1.png)
+![](images/capture2.png)
